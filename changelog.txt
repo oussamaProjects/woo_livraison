@@ -1,0 +1,90 @@
+Bonjour,
+
+Nous créons un site Woocommerce pour un fleuriste qui fait appel à une société de transport pour ses livraisons. L’idée serait d’automatiser la demande d’enlèvement dans les locaux du fleuriste pour livraison du bouquet de fleurs commandé sur le site.
+
+La société de transport s’appelle Top Chrono.
+Elle possède une flotte de véhicule et 2 roues pour des livraison dans Paris et Île de France.
+Pour les livraison en France métropolitaine, elle passe par Chronopost.
+
+Elle s’est associé avec une autre société Eureka Technologies qui a créé et gère l’API permettant de créer des « missions » (demande d’enlèvement pour livraison).
+
+Critères de livraison souhaités par le fleuriste
+
+Livraison à J+2 : 
+
+Tous les bouquets – Top Chrono
+
+Jours de livraison : lundi, mardi, mercredi, jeudi, vendredi, samedi
+Pas de livraison : dimanche et jours fériés
+Si commande un jeudi, livraison le lundi
+Si commande un vendredi, livraison le mardi
+
+Exception bouquet livré partout en France métropolitaine – Chronopost via Top Chrono
+
+Jours de livraison : mardi, mercredi, jeudi, vendredi
+Pas de livraison : lundi, samedi, dimanche et jours fériés
+Si commande un jeudi, livraison le mardi
+Si commande un vendredi, livraison le mardi
+
+Retrait sur place : click & collect
+Jours de retrait : lundi, mardi, mercredi, jeudi, vendredi, samedi
+Pas de retrait le dimanche
+
+
+Lieu de livraison
+Tous les bouquets
+Paris
+92
+93
+94
+Exception bouquet DIY (actuellement) : France Métropolitaine
+
+« Volonté fleuriste » : Livraison offerte quelque soit les conditions
+Afficher le tarif de livraison (barré) pour informations
+
+
+
+Back-office Woocommerce : pouvoir exporter un fichier CSV des livraisons + TVA
+Informations fournis par Eureka Technologies
+ 
+Livrables attendus
+
+Dans la fiche produit :
+
+Afficher la date de livraison estimée, si commande aujourd’hui
+Étape 1 obligatoire : live search par ville ou code postal (dispo dans l’API) + vérification si le lieu de livraison est autorisé dans Woocommerce. Si non, message : nous ne livrons pas encore chez vous
+Étape 2, si étape 1 OK.
+On demande la date de livraison souhaitée + le créneau de livraison.
+
+*************** Exception : si un produit peut être livré dans toute la France et que la ville indiquée n’est pas Paris ou une ville en Île de France, on n’affiche pas de créneaux de livraison car c’est Chronopost qui gère.
+
+Est-il possible d’avoir un affichage « compact date + horaire » similaire ? bergamotte.fr/livraison-fleurs-et-plantes/versailles ou calendly.com/befava/sos-naturo?month=2020-11
+Dans le panier / tunnel de vente
+
+Rappel des infos sélectionnées (date, créneau, message)
+
+
+Dans le BO :
+module de facture pouvoir générer un bon de livraison PDF pour le transporteur sans tarif, 
+enlever message personnel 
+
+et expéditeur. 
+Uniquement les informations du destinataire.
+xoocommerce facture PDF
+
+
+Pouvoir visualiser la liste complète des livraisons (tri par date) + possibilité de l’exporter en CSV. Champs à afficher et exporter en cours de validation par le client
+
+Pouvoir visualiser les informations de livraison de le détail de la commande Woocommerce
+
+
+Ajouter un statut Expédié + email transactionnel envoyé à l’expéditeur
+Dans l’espace client
+
+
+Affichage du suivi de livraison dans la commande
+
+En option (temps réel type deliveroo) disponible dans l’API
+
+Délai de livraison : 4 décembre si possible
+ 
