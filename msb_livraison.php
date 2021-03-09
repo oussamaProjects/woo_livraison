@@ -30,9 +30,9 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-global $ewcship_plugin_url, $ewcship_plugin_dir;
-$ewcship_plugin_dir = dirname(__FILE__) . "/";
-$ewcship_plugin_url = plugins_url() . "/" . basename($ewcship_plugin_dir) . "/";
+global $msb_livraison_plugin_url, $msb_livraison_plugin_dir;
+$msb_livraison_plugin_dir = dirname(__FILE__) . "/";
+$msb_livraison_plugin_url = plugins_url() . "/" . basename($msb_livraison_plugin_dir) . "/";
 /**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org

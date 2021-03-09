@@ -18,11 +18,11 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
         public function __construct()
         {
-            global $ewcship_plugin_dir, $ewcship_plugin_url;
+            global $msb_livraison_plugin_dir, $msb_livraison_plugin_url;
 
             /* plugin url and directory variable */
-            self::$plugin_dir = $ewcship_plugin_dir;
-            self::$plugin_url = $ewcship_plugin_url;
+            self::$plugin_dir = $msb_livraison_plugin_dir;
+            self::$plugin_url = $msb_livraison_plugin_url;
 
             /* load shipping calculator setting */
             $this->msb_settings = get_option(self::$msb_option_key);
@@ -323,7 +323,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
          * Handle localisation
          */
         public function load_plugin_textdomain() {
-                load_plugin_textdomain( 'ewcship', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/' );
+                load_plugin_textdomain( 'msb_livraison', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/' );
         }
         
         public function save_quick_shipping_fields($product)
@@ -472,44 +472,81 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
             $returnResponse = array(); 
             // echo '<pre>';
-            // var_dump($available_methods);
+            // var_dump($available_methods[0]["rates"]);
             // echo '</pre>'; 
-            foreach ($available_methods[0]["rates"] as $key => $value) {
-              
-                if(!$available_methods[0]["rates"][$key]){ 
-                    /* check shipping method and country selected */ 
-                    $returnResponse = array("code" => "error", "message" => __("Nous ne livrons pas encore chez vous", "ewcship"));
-                } elseif ($_POST["calc_shipping_country"] == "") {
-                    $returnResponse = array("code" => "error", "message" => __("Please select shipping country", "ewcship"));
-                } else {
- 
-                    $method_id   = $value->method_id;
-                    
-                    if($method_id == 'flat_rate'){
-                        $country = sanitize_text_field($_POST["calc_shipping_country"]);
 
-                        /* calculate shipping */
-                        $shippingCharge = $this->get_shipping_text(sanitize_text_field($key), $country);
+            if(!$available_methods[0]["rates"]){ 
+                /* check shipping method and country selected */ 
+                $returnResponse = array("code" => "error", "message" => __("Nous ne livrons pas encore chez vous", "msb_livraison")); 
+            }else{
+                foreach ($available_methods[0]["rates"] as $key => $value) {
+                
+                    if(!$available_methods[0]["rates"][$key]){ 
 
-                        /* get country full name */
-                        $country = WC()->countries->countries[$country];
+                        /* check shipping method and country selected */ 
+                        $returnResponse = array("code" => "error", "message" => __("Nous ne livrons pas encore chez vous", "msb_livraison"));
 
-                        if (isset($shippingCharge['label'])) {
-                            if (trim($this->get_setting("shipping_message")) != "") {
-                                $message = str_replace(array("[shipping-method]", "[shipping-cost]", "[shipping-country]"), array($shippingCharge["label"], $shippingCharge["cost"], $country), $this->get_setting("shipping_message"));
+                    } elseif ($_POST["calc_shipping_postcode"] == "") {
+
+                        $returnResponse = array("code" => "error", "message" => __("Please select shipping country", "msb_livraison"));
+
+                    } else {
+    
+                        $method_id   = $value->method_id;
+                        
+                        if($method_id == 'flat_rate'){
+                            $country = sanitize_text_field($_POST["calc_shipping_country"]);
+
+                            /* calculate shipping */
+                            $shippingCharge = $this->get_shipping_text(sanitize_text_field($key), $country);
+
+                            /* get country full name */
+                            $country = WC()->countries->countries[$country];
+
+                            if (isset($shippingCharge['label'])) {
+                                if (trim($this->get_setting("shipping_message")) != "") {
+                                    $message = str_replace(array("[shipping-method]", "[shipping-cost]", "[shipping-country]"), array($shippingCharge["label"], $shippingCharge["cost"], $country), $this->get_setting("shipping_message"));
+                                } else {
+                                    $message = $shippingCharge["label"] . " : " . $shippingCharge["cost"];
+                                    $cost = $shippingCharge["cost"];
+                                    $id = $shippingCharge["id"];
+                                }
+
+                                $returnResponse = array("code" => "success", "message" => __($message, "msb_livraison"), "cost" =>  $cost , "id" =>  $id );
+                            } else if (isset($shippingCharge['code'])) {
+                                $returnResponse = array("code" => "error", "message" => __($shippingCharge['message'], "msb_livraison"));
                             } else {
-                                $message = $shippingCharge["label"] . " : " . $shippingCharge["cost"];
-                                $cost = $shippingCharge["cost"];
+                                $returnResponse = array("code" => "error", "message" => __("Selected Shipping method not available.", "msb_livraison"));
                             }
+                            break;
+                        }
+                        elseif($method_id == 'advanced_free_shipping'){
 
-                            $returnResponse = array("code" => "success", "message" => __($message, "ewcship"), "cost" =>  $cost );
-                        } else if (isset($shippingCharge['code'])) {
-                            $returnResponse = array("code" => "error", "message" => __($shippingCharge['message'], "ewcship"));
-                        } else {
-                            $returnResponse = array("code" => "error", "message" => __("Selected Shipping method not available.", "ewcship"));
+                            $country = sanitize_text_field($_POST["calc_shipping_country"]);
+
+                            /* calculate shipping */
+                            $shippingCharge = $this->get_shipping_text(sanitize_text_field($key), $country);
+
+                            /* get country full name */
+                            $country = WC()->countries->countries[$country];
+
+                            if (isset($shippingCharge['label'])) {
+                                if (trim($this->get_setting("shipping_message")) != "") {
+                                    $message = str_replace(array("[shipping-method]", "[shipping-cost]", "[shipping-country]"), array($shippingCharge["label"], $shippingCharge["cost"], $country), $this->get_setting("shipping_message"));
+                                } else {
+                                    $message = $shippingCharge["label"] . " : " . $shippingCharge["cost"];
+                                    $cost = $shippingCharge["cost"];
+                                }
+
+                                $returnResponse = array("code" => "success", "message" => __($message, "msb_livraison"), "cost" =>  $cost );
+                            } else if (isset($shippingCharge['code'])) {
+                                $returnResponse = array("code" => "error", "message" => __($shippingCharge['message'], "msb_livraison"));
+                            } else {
+                                $returnResponse = array("code" => "error", "message" => __("Selected Shipping method not available.", "msb_livraison"));
+                            }
                         }
                     }
-                }
+                } 
             } 
 
             echo json_encode($returnResponse);
@@ -597,9 +634,9 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
                 /* check shipping method and country selected */
                 if ($_POST["calc_shipping_method"] == "") {
-                    $returnResponse = array("code" => "error", "message" => __("Please select shipping method", "ewcship"));
+                    $returnResponse = array("code" => "error", "message" => __("Please select shipping method", "msb_livraison"));
                 } elseif ($_POST["calc_shipping_country"] == "") {
-                    $returnResponse = array("code" => "error", "message" => __("Please select shipping country", "ewcship"));
+                    $returnResponse = array("code" => "error", "message" => __("Please select shipping country", "msb_livraison"));
                 } else {
                     $country = sanitize_text_field($_POST["calc_shipping_country"]);
 
@@ -616,11 +653,11 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
                             $message = $shippingCharge["label"] . " : " . $shippingCharge["cost"];
                         }
 
-                        $returnResponse = array("code" => "success", "message" => __($message, "ewcship"));
+                        $returnResponse = array("code" => "success", "message" => __($message, "msb_livraison"));
                     } else if (isset($shippingCharge['code'])) {
-                        $returnResponse = array("code" => "error", "message" => __($shippingCharge['message'], "ewcship"));
+                        $returnResponse = array("code" => "error", "message" => __($shippingCharge['message'], "msb_livraison"));
                     } else {
-                        $returnResponse = array("code" => "error", "message" => __("Selected Shipping method not available.", "ewcship"));
+                        $returnResponse = array("code" => "error", "message" => __("Selected Shipping method not available.", "msb_livraison"));
                     }
                 }
             endif;
@@ -669,8 +706,10 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             wc_clear_notices();
 
             if (isset($packages[0]["rates"][$shipping_method])) {
+                
                 $selectedShiiping = $packages[0]["rates"][$shipping_method];
-                $returnResponse = array("label" => $selectedShiiping->label, "cost" => wc_price($selectedShiiping->cost));
+                $returnResponse = array("id" => $selectedShiiping->instance_id, "label" => $selectedShiiping->label, "cost" => wc_price($selectedShiiping->cost));
+                
             } else {
                 $AllMethod = WC()->shipping->load_shipping_methods();
                 $selectedMethod = $AllMethod[$shipping_method];
@@ -697,8 +736,8 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
                 // Add the color picker css file       
                 wp_enqueue_style('wp-color-picker');
 
-                wp_enqueue_script('ewcship-admin', self::$plugin_url . "assets/js/admin.js", array('wp-color-picker'), false, true);
-                wp_enqueue_style('ewcship-admin', self::$plugin_url . "assets/css/admin.css");
+                wp_enqueue_script('msb_livraison-admin', self::$plugin_url . "assets/js/admin.js", array('wp-color-picker'), false, true);
+                wp_enqueue_style('msb_livraison-admin', self::$plugin_url . "assets/css/admin.css");
             }
         }
 
@@ -760,8 +799,8 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
         public function wp_footer()
         {
-            wp_enqueue_script('wc-country-select');
-            wp_enqueue_script(self::$plugin_slug, self::$plugin_url . "assets/js/shipping-calculator.js");
+            // wp_enqueue_script('wc-country-select');
+            // wp_enqueue_script(self::$plugin_slug, self::$plugin_url . "assets/js/shipping-calculator.js");
         }
 
         /* register admin menu for shipping calculator setting */
@@ -789,7 +828,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
         public function saveSetting()
         {
-            $arrayRemove = array(self::$plugin_slug, "btn-ewcship-submit");
+            $arrayRemove = array(self::$plugin_slug, "btn-msb_livraison-submit");
             $saveData = array();
             foreach ($_POST as $key => $value):
                 if (in_array($key, $arrayRemove))

@@ -21,6 +21,7 @@
                                 <input type="hidden" name="postal_code" id="postal_code" v-bind:value="location_infos.PostalCode">
                                 <input type="hidden" name="city_name" id="city_name" v-bind:value="location_infos.CityName">
                                 <input v-model="location_label" placeholder="Code postal / Ville" autocomplete="off" class="frontShow" type="text" id="sub_order_zip_code_id">
+                                
                             </div>
                             <div v-if="openCodeAutocomplete" class="js-results">
                                 <div class="js-results-container autocompleteField__wrapper__results autocompleteField__wrapper__results--frontShow">
@@ -47,6 +48,11 @@
                 <a class="oe_custom_button" v-on:click="isHiddenPopup = false; return false;" :disabled="isShowPopupDisabled">
                     <?= __('Choisir une date de livraison', 'msb_livraison'); ?>
                 </a>
+                <br>
+                <a class="oe_custom_button s" v-on:click="createShipment"><?= __('Create Shipment', 'msb_livraison'); ?></a> 
+                <br>
+                <a class="oe_custom_button s" v-on:click="shipmentSearch"><?= __('Search Shipment', 'msb_livraison'); ?></a> 
+
                 <div class="shipping_avalablity_message" v-html="shipping_avalablity_message"></div> 
             </div>
 
@@ -74,7 +80,7 @@
                                     
                                     <label class="form__field__input" v-for="{id, name, selected} in delivery_slots">
                                         <input class="js-radio-value-hide" v-on:click="handleDeliverySlot" type="radio" :value="name" name="delivery_slot" :id="id" v-model="delivery_slots">
-                                        <div class="radioItem__wrapper js-radio-item" :class="{selected: delivery_slot_value == name}">
+                                        <div class="radioItem__wrapper js-radio-item" :class="{selecteded: delivery_slot_value == name}">
                                             <div class="infoCard__wrapper ">
                                                 <div class="infoCard__line">
                                                     {{ name }}
@@ -111,4 +117,3 @@
         <pre>{{response | json}}</pre>
     </div> -->
 </div>
-
