@@ -1,5 +1,11 @@
 
- 
+ <?php 
+    global $post;
+    $post_id = $post->ID;
+    $product = wc_get_product( $post_id );
+    $title = get_the_title($post_id);
+    $price = $product->get_price_html();
+?>
     <div id="msb-geocoding"> 
         <div class="msb_form">  
 
@@ -13,7 +19,7 @@
                         </div>
                         <div class="shipping_date">
                             Commander aujourd’hui pour être livré
-                            <div class="shipping_date_message" >{{ min_date | formatDate }}</div> 
+                            <div class="shipping_date_message" >{{ min_date | formatDate }}</div>  
                         </div> 
                     </div> 
                     

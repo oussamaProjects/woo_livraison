@@ -47,11 +47,86 @@ class Msb_livraison_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
+
+	
+	private static $plugin_url;
+	private static $plugin_dir;
+	private static $plugin_title = "Shipping Calculator";
+	private static $plugin_slug = "msb-calculator-setting";
+	private static $msb_option_key = "msb-calculator-setting";
+	private $msb_settings;
+	public static $license = "";
+	public static $login = "";
+	public static $password = "";
+	public static $client = "";
+
+	
 	public function __construct( $plugin_name, $version ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		/* create admin menu for shipping calculator setting */
+		add_action("admin_menu", array($this, "admin_menu"));
+
+		global $msb_livraison_plugin_dir, $msb_livraison_plugin_url;
+
+		/* plugin url and directory variable */
+		self::$plugin_dir = $msb_livraison_plugin_dir;
+		self::$plugin_url = $msb_livraison_plugin_url;
+
+		/* load shipping calculator setting */
+		$this->msb_settings = get_option(self::$msb_option_key);
+
+		self::$license = $this->get_setting('license');
+		self::$login = $this->get_setting('login');
+		self::$password = $this->get_setting('password');
+		self::$client = $this->get_setting('client');
+
+	}
+
+	public function admin_menu()
+	{
+		$wc_page = 'woocommerce';
+		add_submenu_page($wc_page, self::$plugin_title, self::$plugin_title, "install_plugins", self::$plugin_slug, array($this, "calculator_setting_page"));
+	}
+
+
+    public function calculator_setting_page()
+	{
+		/* save shipping calculator setting */
+		if (isset($_POST[self::$plugin_slug])) {
+			$this->saveSetting();
+		}
+		/* include admin  shipping calculator setting file */
+		include_once self::$plugin_dir . "admin/views/shipping-setting.php";
+	}
+
+	/* function for save setting */
+
+	public function saveSetting()
+	{
+		$arrayRemove = array(self::$plugin_slug, "btn-msb_livraison-submit");
+		$saveData = array();
+		foreach ($_POST as $key => $value):
+			if (in_array($key, $arrayRemove))
+				continue;
+			$saveData[$key] = $value;
+		endforeach;
+		$this->msb_settings = $saveData;
+		update_option(self::$msb_option_key, $saveData);
+	}
+
+	public function get_setting($key)
+	{
+
+		if (!$key || $key == "")
+			return;
+
+		if (!isset($this->msb_settings[$key]))
+			return;
+
+		return $this->msb_settings[$key];
 	}
 
 	/**

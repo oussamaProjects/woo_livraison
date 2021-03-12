@@ -37,6 +37,11 @@ pre code {
     background-color: #ffffff;
 }
 
+.hidden {
+    display: none !important;
+    opacity: 0 !important;
+}
+
 .content-separator {
     margin-bottom: 1.5rem;
 }
@@ -919,6 +924,14 @@ span.translation_missing {
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    transition: opacity .4s ease;
+    pointer-events: none;
+}
+
+.form__field--container.showed {
+    opacity: 1;
+    pointer-events: all;
 }
 
 .ajouter-au-panier {
@@ -963,6 +976,11 @@ span.translation_missing {
 
 .shipping_avalablity_message {
     font-size: 14px;
+    text-decoration: line-through;
+}
+
+.woocommerce-checkout ul#shipping_method {
+    text-decoration: line-through !important;
 }
 
 .shipping_date_container {
@@ -3477,4 +3495,17 @@ dl.variation dd {
 
 dl.variation dt.variation-hidden {
     display: none !important;
+}
+
+.shipment_event_list {
+    margin: 24px 0;
+}
+
+.shipment_event_list th {
+    font-weight: bold;
+}
+
+.shipment_event_list th,
+.shipment_event_list td {
+    border: 1px solid;
 }

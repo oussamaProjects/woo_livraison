@@ -9,7 +9,8 @@ var app = new Vue({
     data() {
         return {
             isShowPopupDisabled: true,
-            isHiddenPopup: false,
+            isDeliverySlots: true,
+            isHiddenPopup: true,
             openCodeAutocomplete: true,
             calc_shipping: null,
             shipping_avalablity_message: "",
@@ -29,26 +30,21 @@ var app = new Vue({
 
             search_val: '',
 
-            delivery_slot_value: "10-13H",
+            delivery_slot_value: "",
+            delivery_slot_id: "",
 
             credential: {
                 License: msb_livraison_object.credential.license,
                 Login: msb_livraison_object.credential.login,
                 Password: msb_livraison_object.credential.password
             },
-            clientCode: 'DOC',
+            clientCode: msb_livraison_object.clientCode,
 
             searchParam: {
-                clientCode: 'DOC',
+                clientCode: msb_livraison_object.clientCode,
                 shipmentId: '',
                 serviceCode: ''
             },
-
-            // credential: {
-            //     License: 'FORMAPIWEB',
-            //     Login: 'doc',
-            //     Password: 'doc',
-            // },
 
             countryCode: 'FR',
             city: {
@@ -69,9 +65,9 @@ var app = new Vue({
             locale: { id: 'fr', firstDayOfWeek: 3, masks: { weekdays: 'WWW' } }
         }
     },
-
     created() {
         //setInterval(this.setDate(4), 1000);
+
     },
 
     computed: {
@@ -105,17 +101,17 @@ var app = new Vue({
         delivery_slots() {
             return [{
                     "id": 1,
-                    "name": "10-13H",
+                    "slot_name": "10-13H",
                     "selected": true
                 },
                 {
                     "id": 2,
-                    "name": "14-17H",
+                    "slot_name": "14-17H",
                     "selected": false
                 },
                 {
                     "id": 3,
-                    "name": "18-21H",
+                    "slot_name": "18-21H",
                     "selected": false
                 },
             ]
@@ -135,6 +131,37 @@ var app = new Vue({
             return date;
         },
 
+
+        shipping_date() {
+
+            if (this.days[0]) {
+
+                let _days = _.cloneDeep(this.days);
+                let _date = _days[0].date;
+
+                var _decal_shipping_time = 0;
+                _date.setDate(_date.getDate() + this.shipping_time);
+
+                if (this.shipping_time == 2) {
+                    if (_date.getDay() == 6 || _date.getDay() == 0) {
+                        _decal_shipping_time = 2;
+                    }
+                } else if (this.shipping_time == 3) {
+                    if (_date.getDay() == 1) {
+                        _decal_shipping_time = 1;
+                    } else if (_date.getDay() == 6) {
+                        _decal_shipping_time = 3;
+                    } else if (_date.getDay() == 0) {
+                        _decal_shipping_time = 2;
+                    }
+                }
+
+                _date.setDate(_date.getDate() + _decal_shipping_time);
+
+                return _date;
+            }
+        },
+
     },
 
     watch: {
@@ -148,6 +175,11 @@ var app = new Vue({
         formatDate(value) {
             if (value) {
                 return moment(String(value)).format('dddd D MMMM');
+            }
+        },
+        stringDate(value) {
+            if (value) {
+                return moment(String(value)).format('D/MM/yyyy');
             }
         },
 
@@ -173,16 +205,27 @@ var app = new Vue({
                         app.isShowPopupDisabled = false;
                         if (id == 4) {
                             app.disabled_dates = { weekdays: [1, 2, 7] };
-                            this.shipping_time = 3;
+                            app.shipping_time = 3;
+                            app.isShowPopupDisabled = false;
+                            app.isDeliverySlots = true;
+                        } else if (id == 5) {
+                            app.disabled_dates = { weekdays: [1, 7] };
+                            app.shipping_time = 2;
+                            app.isShowPopupDisabled = false;
+                            app.isDeliverySlots = true;
                         } else {
                             app.disabled_dates = { weekdays: [1, 7] };
-                            this.shipping_time = 2;
+                            app.shipping_time = 2;
+                            app.isShowPopupDisabled = false;
+                            app.isDeliverySlots = true;
                         }
                     } else {
                         app.isShowPopupDisabled = true;
+                        app.isDeliverySlots = false;
                     }
                     app.shipping_avalablity_message = message;
                     app.shipping_cost = cost;
+                    console.log(id);
                 },
                 error: function(error) {
                     app.shipping_avalablity_message = 'There seems to be an error with this search.';
@@ -193,6 +236,7 @@ var app = new Vue({
 
         handleDeliverySlot(e) {
             this.delivery_slot_value = e.target.value;
+            this.delivery_slot_id = e.target.id;
         },
 
         setDate(days) {
@@ -227,7 +271,7 @@ var app = new Vue({
                             infos: city
                         };
                     });
-                    this.searchResults = results;
+                    app.searchResults = results;
                 }
             }).catch(error => console.log(error));
         },
@@ -285,11 +329,11 @@ var app = new Vue({
             } else {
 
                 this.days.splice(day.id, 1);
-                var new_shipping_date = this.shipping_dates(day.date);
+                // var new_shipping_date = this.shipping_dates(day.date);
 
                 this.days.push({
                     id: day.id,
-                    date: new_shipping_date,
+                    date: day.date,
                 });
 
             }
@@ -325,110 +369,6 @@ var app = new Vue({
             return date;
         },
 
-        createShipment() {
-            this.saving = true;
-            var createShipmentRequest = {};
-
-            //Identification
-            createShipmentRequest.Credential = this.credential;
-
-            //Indique que l'on va saisir une mission et non un devis
-            createShipmentRequest.Quote = false;
-            //Indique la mission va être enregistré dans Dispatch
-            createShipmentRequest.Save = true;
-
-            var shipment = {};
-
-            /*
-             * à partir de la version 2.4.4 de dispatch et de la version 46 de l'API
-             * Ce mode permet d'utiliser la class ShipmentSchedule de l'objet shipment,
-             * Cette classe permet de manipuler plus facilement les dates de la mission et de définir des créneaux d'enlèvement livraison
-             * Ce mode doit être utilisé pour tout nouveau développement 
-             */
-            shipment.AdvancedDateMode = true;
-            //Code Client Dispatch
-            shipment.ClientCode = this.clientCode;
-
-            //Adresse d'enlèvement
-            var pickupAddress = {};
-
-            pickupAddress.Name = 'Enlèvement API Test';
-            pickupAddress.PostalCode = '34000';
-            pickupAddress.City = 'MONTPELLIER';
-            //Obligation, si le paramètre est passé à null alors Dispatch tente de faire une correspondance de ville, si il échoue alors il peut y avoir des problèmes de tarification
-            pickupAddress.CityID = null;
-            pickupAddress.Sector = '';
-            pickupAddress.Country = 'FR';
-
-            shipment.FromAddress = pickupAddress;
-
-            //Date d'enlèvement
-            shipment.PickupSchedules = {};
-            //Date livraison
-            shipment.DeliverySchedules = {};
-
-            //Adresse de livraison
-            var deliveryAddress = {};
-            deliveryAddress.Name = 'Livraison API Test';
-            deliveryAddress.PostalCode = '30000';
-            deliveryAddress.City = 'NIMES';
-            deliveryAddress.Sector = '';
-            //CityID dans le cas où l'on utilise pas une ville référensée dans Dispatch
-            deliveryAddress.CityID = null;
-            deliveryAddress.Country = 'FR';
-
-            shipment.ToAddress = deliveryAddress;
-
-            //Code Prestation Dispatch
-            shipment.ServiceCode = 'T1';
-
-            createShipmentRequest.Shipment = shipment;
-
-            //La sauvegarde de mission renverra le prix ttc dans l'objet shipment
-            createShipmentRequest.ComputePriceWithTaxes = true;
-
-            var _this = this;
-            var apiurl = msb_livraison_object.base_api_url + '/CreateShipment';
-            axios.post(apiurl, createShipmentRequest).then(response => {
-                _this.response = response;
-                response = response.data;
-                console.log(response)
-            }).catch(error => console.log(error));
-
-
-        },
-
-        shipmentSearch() {
-
-            this.searching = true;
-            var searchRequest = {};
-            searchRequest.Credential = this.credential;
-
-            searchRequest.LoadShipmentHistory = true;
-            //Critères de recherche
-            searchRequest.SearchParams = {};
-
-            if (this.searchParam.clientCode) {
-                //Recherche par code client
-                searchRequest.SearchParams.ClientList = [this.searchParam.clientCode];
-            }
-            if (this.searchParam.shipmentId) {
-                //Recherche par numéro de mission
-                searchRequest.SearchParams.IdList = [this.searchParam.shipmentId];
-            }
-            if (this.searchParam.serviceCode) {
-                //recherche par code de prestation
-                searchRequest.SearchParams.ServiceCodeList = [this.searchParam.serviceCode];
-            }
-
-            var _this = this;
-            var apiurl = msb_livraison_object.base_api_url + '/Shipments';
-            axios.post(apiurl, searchRequest).then(response => {
-                _this.response = response;
-                response = response.data;
-                console.log(response)
-            }).catch(error => console.log(error));
-        }
 
     },
 

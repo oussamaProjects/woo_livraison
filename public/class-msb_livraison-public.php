@@ -106,10 +106,11 @@ class Msb_livraison_Public {
 			'ajax_url' 		=> admin_url('admin-ajax.php'),
 			'base_api_url' 	=> 'http://dispatchweb.eureka-technology.fr/WebManager/WCFDispatchAPI.svc/REST/Json',
 			'credential' 		=> array(
-				'license' 		=> 'FORMAPIWEB',
-				'login' 		=> 'doc',
-				'password' 		=> 'doc',
+				'license' 		=> Msb_livraison_Admin::$license,
+				'login' 		=> Msb_livraison_Admin::$login,
+				'password' 		=> Msb_livraison_Admin::$password, 
 			),
+			'clientCode' 		=> Msb_livraison_Admin::$client . 'ere',
 		);
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/msb_livraison-public.js', array( 'jquery' ), $this->version, false );
@@ -121,6 +122,7 @@ class Msb_livraison_Public {
 		wp_register_script( 'msb_livraison_vmoment'			, 'https://cdn.jsdelivr.net/npm/vue-moment@4.1.0/dist/vue-moment.min.js');
 		wp_register_script( 'msb_livraison_vcalendar'		, 'https://cdn.jsdelivr.net/npm/v-calendar@2.1.1/lib/v-calendar.umd.min.js');
 		wp_register_script( 'msb_livraison_axios'			, 'https://cdn.jsdelivr.net/npm/axios@0.21.0/dist/axios.min.js' );
+		wp_register_script( 'msb_livraison_lodash'			, 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js' );
 		// wp_register_script( 'axios'							, 'https://unpkg.com/axios/dist/axios.min.js' );
 		
 		wp_register_script( 'msb_livraison_form'			, plugin_dir_url( __FILE__ ) . 'js/msb_livraison-form.js', array( 'jquery' ), $this->version, false );

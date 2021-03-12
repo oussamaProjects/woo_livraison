@@ -1,39 +1,21 @@
-<div class="bs-example" id="vueBasicShimentEntry">
+<div class="msb-create-shipping" id="msb-create-shipping">
   <h2 id="SaisirMissionExempleLive">Exemple live</h2>
   <a href="js/sample/exemple-saisiemissionsimple.js">Télécharger le fichier javascript correspondant</a>
   <p>
     Renseignez vos identifiants de test et cliquez sur se connecter
   </p>
-  <div class="form-inline" role="form">
-    <div class="form-group">
-      <label class="sr-only" for="intputExempleSaisieMissionSimpleLicence">
-        Code Licence Dispatch</label>
-      <input type="text" class="form-control" id="intputExempleSaisieMissionSimpleLicence" placeholder="Code Licence Dispatch" v-model="credential.license" />
-    </div>
-    <div class="form-group">
-      <label class="sr-only" for="intputExempleSaisieMissionSimpleLogin">
-        Login</label>
-      <input type="text" class="form-control" id="intputExempleSaisieMissionSimpleLogin" placeholder="Login donneur ordre" v-model="credential.login" />
-    </div>
-    <div class="form-group">
-      <label class="sr-only" for="intputExempleSaisieMissionSimplePassword">
-        Mot de passe</label>
-      <input type="password" class="form-control" id="intputExempleSaisieMissionSimplePassword" placeholder="Mot de passe" v-model="credential.password" />
-    </div>
-    <div class="form-group">
-      <label class="sr-only" for="intputExempleSaisieMissionSimpleCodeClient">
-        Code client</label>
-      <input type="text" class="form-control" id="intputExempleSaisieMissionSimpleCodeClient" placeholder="CodeClient" v-model="clientCode" />
-    </div>
-  </div>
+  
   <div class="form" role="form">
     <div class="form-group">
       <p>
         Commande une mission pour la prestion T1 de Montpellier à Lille pour le client
       </p>
     </div>
-    <button type="button" class="btn btn-success" v-on:click="createShipment">
-      Commander</button>
+    
+    <button type="button" class="btn btn-success" v-on:click="createShipment">Commander</button>
+    <button type="button" class="btn btn-success" v-on:click="shipmentSearch">shipmentSearch</button>
+    <button type="button" class="btn btn-success" v-on:click="authentication">authentication</button>
+
     <img v-if="saving" src="https://dispatchweb.eureka-technology.fr/documentationapiweb/Content/images/ellipsis.gif" height="32px" />
     <div class="form-horizontal" v-if="shipmentResult.Id">
       <div class="form-group">
@@ -56,6 +38,12 @@
       </div>
     </div>
     <div>
+      <h3>
+      items
+            </h3>
+            <pre>
+      {{ items }}
+      </pre>
       <h3>
             Requête API
             </h3>
