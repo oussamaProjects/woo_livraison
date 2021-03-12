@@ -61,8 +61,8 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
             /* shipping calculato shortcode */
             add_shortcode("shipping-calculator", array($this, "msb_shipping_calculator"));
-            add_shortcode("msb-shipping", array($this, "msb_shipping")); 
             add_shortcode("msb-shipping-info", array($this, "msb_shipping_info")); 
+            add_shortcode("msb-shipping", array($this, "msb_shipping")); 
             add_shortcode("msb-create-mission", array($this, "msb_create_mission")); 
 
             add_action('woocommerce_product_options_general_product_data', array($this, 'add_custom_price_box'));
@@ -113,8 +113,8 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         }
 
         /**
-          * Add a custom text input field to the product page
-        */
+            * Add a custom text input field to the product page
+            */
         public function msb_woocommerce_before_add_to_cart_button() {
             echo do_shortcode('[msb-shipping-info]'); 
         } 
@@ -160,8 +160,8 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         }
       
         /**
-          * Add custom cart item data
-        */
+            * Add custom cart item data
+            */
         public function msb_add_cart_item_data( $cart_item_data, $product_id, $variation_id ) {
 
             if( isset( $_POST['delivery_slot'] ) ) { 
@@ -193,7 +193,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
         /**
             * Display custom item data in the cart
-        */
+            */
         public function msb_get_item_data( $item_data, $cart_item_data ) {
            
             if( isset( $cart_item_data['msb_shipping_dates'] ) && !empty( $cart_item_data['msb_shipping_dates'] ) ) { 
@@ -245,7 +245,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
       
         /**
             * Add custom meta to order
-        */
+            */
         public function msb_checkout_create_order_line_item( $item, $cart_item_key, $values, $order ) {
 
             if( isset( $values['msb_shipping_dates'] ) ) {
@@ -269,8 +269,8 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         }
   
         /**
-          * Add custom cart item data to emails
-        */
+            * Add custom cart item data to emails
+            */
         public function msb_order_item_name( $product_name, $item ) {
             
             if( isset( $item['msb_shipping_dates'] ) ) {
@@ -301,7 +301,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
          * @param \WC_Shipping_Rate $method the shipping method
          * @return float cost
          */
-        function msb_wc_shipping_cost_tiers( $cost, $method ) {
+        public function msb_wc_shipping_cost_tiers( $cost, $method ) {
 
             // TODO: change the numbers in this array with your desired instance IDs
             // see if this shipping instance is one we want to modify cost for
@@ -320,12 +320,12 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         }
 
         /*
-        * Created on Fri Mar 12 2021 12:42:27 PM
-        * Remove Shipping from Woocommerce cart
-        *
-        * Copyright (c) 2021 MSB
-        */
-        function msb_disable_shipping_calc_on_cart( $show_shipping ) {
+            * Created on Fri Mar 12 2021 12:42:27 PM
+            * Remove Shipping from Woocommerce cart
+            *
+            * Copyright (c) 2021 MSB
+            */
+        public function msb_disable_shipping_calc_on_cart( $show_shipping ) {
             if( is_cart() || is_checkout()) {
                 return false;
             }
@@ -334,12 +334,12 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
 
         /*
-        * Created on Fri Mar 12 2021 12:42:27 PM
-        * Hide shipping rates when free shipping is available.
-        *
-        * Copyright (c) 2021 MSB
-        */
-        function msb_shipping_when_free_is_available( $rates ) {
+            * Created on Fri Mar 12 2021 12:42:27 PM
+            * Hide shipping rates when free shipping is available.
+            *
+            * Copyright (c) 2021 MSB
+            */
+        public function msb_shipping_when_free_is_available( $rates ) {
             $free = array(); 
             foreach ( $rates as $rate_id => $rate ) {
                 if ( 'free_shipping' === $rate->method_id ) {
@@ -352,11 +352,11 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
 
         /*
-        * Created on Fri Mar 12 2021 12:42:27 PM
-        * Whene the order status are changed
-        *
-        * Copyright (c) 2021 MSB
-        */
+            * Created on Fri Mar 12 2021 12:42:27 PM
+            * Whene the order status are changed
+            *
+            * Copyright (c) 2021 MSB
+            */
         public function msb_order_status_changed( $order_id ) { 
                 
             // Order Setup Via WooCommerce
@@ -529,20 +529,19 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
  
         }
 
-
         /*
-        * Created on Fri Mar 12 2021 12:42:27 PM
-        * Affichage du suivi de livraison dans la commande
-        *
-        * Copyright (c) 2021 MSB
-        */
+            * Created on Fri Mar 12 2021 12:42:27 PM
+            * Affichage du suivi de livraison dans la commande
+            *
+            * Copyright (c) 2021 MSB
+            */
         public function msb_order_details_after_order_table( $order ) { 
             
             $items = $order->get_items(); 
-            $i = 0;
+            $inc = 0;
                
             foreach ($items as $key => $item) {
-                $i++;
+                $inc++;
 
                 $product = $item->get_product();
                 
@@ -584,11 +583,17 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
                     $trackingUrl = $shipmentList['TrackingUrl'];
                     $shipmentEventList = $shipmentList['ShipmentEventList'];
                     
-                    if( $i==1 ){  ?>
+                    if( $inc==1 ){  ?>
                         <h2 class="woocommerce-order-details__title"><?php esc_html_e( 'Order tracking', 'woocommerce' ); ?></h2>
                     <?php } ?>
 
                     <a href="<?= $trackingUrl?>" target="_blank">Tracking Url</a>
+
+                    <?php
+                    $is_visible = true;
+                    $product_permalink = apply_filters( 'woocommerce_order_item_permalink', $is_visible ? $product->get_permalink( $item ) : '', $item, $order );
+		            echo apply_filters( 'woocommerce_order_item_name', $product_permalink ? sprintf( '<a href="%s"><h3 class="">%s</h3></a>', $product_permalink, $item->get_name() ) : $item->get_name(), $item, $is_visible ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    // wc_display_item_meta( $item ); ?>
                     
                     <?php if($shipmentEventList){ ?>
 
@@ -614,7 +619,6 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             }
                   
         }
-       
         
         /**
          * Handle localisation
@@ -805,7 +809,6 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
                                     $message = str_replace(array("[shipping-method]", "[shipping-cost]", "[shipping-country]"), array($shippingCharge["label"], $shippingCharge["cost"], $country), $this->get_setting("shipping_message"));
                                 } else {
                                     $message = $shippingCharge["label"] . " : " . $shippingCharge["cost"];
-                                    $message = $shippingCharge["label"];
                                     $cost = $shippingCharge["cost"];
                                     $id = $shippingCharge["id"];
                                 }
@@ -817,32 +820,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
                                 $returnResponse = array("code" => "error", "message" => __("Selected Shipping method not available.", "msb_livraison"));
                             }
                             break;
-                        }
-                        // elseif($method_id == 'advanced_free_shipping'){
-
-                        //     $country = sanitize_text_field($_POST["calc_shipping_country"]);
-
-                        //     /* calculate shipping */
-                        //     $shippingCharge = $this->get_shipping_text(sanitize_text_field($key), $country);
-
-                        //     /* get country full name */
-                        //     $country = WC()->countries->countries[$country];
-
-                        //     if (isset($shippingCharge['label'])) {
-                        //         if (trim($this->get_setting("shipping_message")) != "") {
-                        //             $message = str_replace(array("[shipping-method]", "[shipping-cost]", "[shipping-country]"), array($shippingCharge["label"], $shippingCharge["cost"], $country), $this->get_setting("shipping_message"));
-                        //         } else {
-                        //             $message = $shippingCharge["label"] . " : " . $shippingCharge["cost"];
-                        //             $cost = $shippingCharge["cost"];
-                        //         }
-
-                        //         $returnResponse = array("code" => "success", "message" => __($message, "msb_livraison"), "cost" =>  $cost );
-                        //     } else if (isset($shippingCharge['code'])) {
-                        //         $returnResponse = array("code" => "error", "message" => __($shippingCharge['message'], "msb_livraison"));
-                        //     } else {
-                        //         $returnResponse = array("code" => "error", "message" => __("Selected Shipping method not available.", "msb_livraison"));
-                        //     }
-                        // }
+                        } 
                     }
                 } 
             } 
@@ -875,7 +853,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
 
         //Return string for shortcode
-        function msb_shipping(){
+        public function msb_shipping(){
         
             wp_enqueue_script('msb_livraison_moment');
             wp_enqueue_script('msb_livraison_vuejs');
@@ -895,7 +873,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
         }  
 
-        function msb_shipping_info(){
+        public function msb_shipping_info(){
             ob_start();
             include_once self::$plugin_dir . 'public/views/shipping-info.php';
             $content = ob_get_contents();
@@ -903,9 +881,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             return $content; 
         } 
 
- 
-
-        function msb_create_mission(){
+        public function msb_create_mission(){
             
             wp_enqueue_script('msb_livraison_moment');
             wp_enqueue_script('msb_livraison_vuejs');
@@ -925,9 +901,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             return $content; 
         }  
 
-
-        /* calculate shiiping */
-
+        /* calculate shipping */
         public function ajax_calc_shipping()
         {
             $returnResponse = array();

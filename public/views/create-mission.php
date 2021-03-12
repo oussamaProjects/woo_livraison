@@ -15,6 +15,7 @@
     <button type="button" class="btn btn-success" v-on:click="createShipment">Commander</button>
     <button type="button" class="btn btn-success" v-on:click="shipmentSearch">shipmentSearch</button>
     <button type="button" class="btn btn-success" v-on:click="authentication">authentication</button>
+    <button type="button" class="btn btn-success" v-on:click="getClients">Clients</button>
 
     <img v-if="saving" src="https://dispatchweb.eureka-technology.fr/documentationapiweb/Content/images/ellipsis.gif" height="32px" />
     <div class="form-horizontal" v-if="shipmentResult.Id">

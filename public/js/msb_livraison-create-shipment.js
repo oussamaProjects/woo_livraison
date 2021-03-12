@@ -153,6 +153,7 @@ var app_shipping = new Vue({
             authentificationRequest.Credential.EMail = null;
             authentificationRequest.Credential.Language = 'fr-FR';
 
+
             var _this = this;
             var apiurl = msb_livraison_object.base_api_url + '/Authentify';
 
@@ -162,7 +163,41 @@ var app_shipping = new Vue({
 
                 if (response.Status === 200 && response.Authentified === true) {
                     console.log(response);
+                    _this.apiResponse = response;
                     alert('Authentification success Token is ' + response.ConnectionToken);
+                }
+
+            }).catch(error => console.log(error));
+
+
+        },
+
+        getClients() {
+            console.log('GetAllClientsLight');
+            //Creation d'un objet de type requestType : 
+            var authentificationRequest = {};
+            authentificationRequest.Credential = {};
+            //Utilisation de la licence transporteur Dispatch
+            authentificationRequest.Credential.License = this.credential.License;
+            //Login et mot de passe donneur d'ordre
+            authentificationRequest.Credential.Login = this.credential.Login;
+            authentificationRequest.Credential.Password = this.credential.Password;
+            authentificationRequest.Credential.EMail = null;
+            authentificationRequest.Credential.Language = 'fr-FR';
+
+            var _this = this;
+            var apiurl = msb_livraison_object.base_api_url + '/GetAllClientsLight';
+
+            axios.post(apiurl, authentificationRequest).then(response => {
+                _this.response = response;
+                response = response.data;
+                if (response.Status === 200) {
+                    console.log(response);
+                    _this.apiResponse = response;
+                    response.CustomersList.forEach(customer => {
+                        console.log(customer.Code);
+                        console.log(customer.Label);
+                    });
                 }
 
             }).catch(error => console.log(error));
