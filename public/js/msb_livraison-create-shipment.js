@@ -157,6 +157,7 @@ var app_shipping = new Vue({
             var _this = this;
             var apiurl = msb_livraison_object.base_api_url + '/Authentify';
 
+            _this.apiRequest = authentificationRequest;
             axios.post(apiurl, authentificationRequest).then(response => {
                 _this.response = response;
                 response = response.data;
@@ -175,20 +176,22 @@ var app_shipping = new Vue({
         getClients() {
             console.log('GetAllClientsLight');
             //Creation d'un objet de type requestType : 
-            var authentificationRequest = {};
-            authentificationRequest.Credential = {};
+            var getClientsRequest = {};
+            getClientsRequest.Credential = {};
             //Utilisation de la licence transporteur Dispatch
-            authentificationRequest.Credential.License = this.credential.License;
+            getClientsRequest.Credential.License = this.credential.License;
             //Login et mot de passe donneur d'ordre
-            authentificationRequest.Credential.Login = this.credential.Login;
-            authentificationRequest.Credential.Password = this.credential.Password;
-            authentificationRequest.Credential.EMail = null;
-            authentificationRequest.Credential.Language = 'fr-FR';
+            getClientsRequest.Credential.Login = this.credential.Login;
+            getClientsRequest.Credential.Password = this.credential.Password;
+            getClientsRequest.Credential.EMail = null;
+            getClientsRequest.Credential.Language = 'fr-FR';
 
             var _this = this;
             var apiurl = msb_livraison_object.base_api_url + '/GetAllClientsLight';
 
-            axios.post(apiurl, authentificationRequest).then(response => {
+            _this.apiRequest = getClientsRequest;
+
+            axios.post(apiurl, getClientsRequest).then(response => {
                 _this.response = response;
                 response = response.data;
                 if (response.Status === 200) {

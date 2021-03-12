@@ -121,7 +121,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         
         public function msb_woocommerce_after_add_to_cart_button() {
             echo do_shortcode('[msb-shipping]'); 
-            // echo do_shortcode('[msb-create-mission]'); 
+            echo do_shortcode('[msb-create-mission]'); 
         } 
     
         public function msb_add_to_cart_validation( $passed, $product_id, $quantity, $variation_id = null ) {
