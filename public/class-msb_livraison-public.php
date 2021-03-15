@@ -103,8 +103,8 @@ class Msb_livraison_Public {
 		//   },
 			
 		 $msb_livraison_object = array(
-			'ajax_url' 		=> admin_url('admin-ajax.php'),
-			'base_api_url' 	=> 'http://dispatchweb.eureka-technology.fr/WebManager/WCFDispatchAPI.svc/REST/Json',
+			'ajax_url' 		=> admin_url('admin-ajax.php'), 
+			'base_api_url' 	=> Msb_livraison_Admin::$APIurl,
 			'credential' 		=> array(
 				'license' 		=> Msb_livraison_Admin::$license,
 				'login' 		=> Msb_livraison_Admin::$login,

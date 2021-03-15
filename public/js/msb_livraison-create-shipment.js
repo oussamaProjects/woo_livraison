@@ -142,17 +142,10 @@ var app_shipping = new Vue({
         },
 
         authentication() {
+            console.log('authentication');
             //Creation d'un objet de type requestType : 
             var authentificationRequest = {};
-            authentificationRequest.Credential = {};
-            //Utilisation de la licence transporteur Dispatch
-            authentificationRequest.Credential.License = this.credential.License;
-            //Login et mot de passe donneur d'ordre
-            authentificationRequest.Credential.Login = this.credential.Login;
-            authentificationRequest.Credential.Password = this.credential.Password;
-            authentificationRequest.Credential.EMail = null;
-            authentificationRequest.Credential.Language = 'fr-FR';
-
+            authentificationRequest.Credential = this.credential;
 
             var _this = this;
             var apiurl = msb_livraison_object.base_api_url + '/Authentify';
@@ -160,11 +153,11 @@ var app_shipping = new Vue({
             _this.apiRequest = authentificationRequest;
             axios.post(apiurl, authentificationRequest).then(response => {
                 _this.response = response;
+                _this.apiResponse = response;
                 response = response.data;
 
                 if (response.Status === 200 && response.Authentified === true) {
                     console.log(response);
-                    _this.apiResponse = response;
                     alert('Authentification success Token is ' + response.ConnectionToken);
                 }
 
@@ -177,14 +170,7 @@ var app_shipping = new Vue({
             console.log('GetAllClientsLight');
             //Creation d'un objet de type requestType : 
             var getClientsRequest = {};
-            getClientsRequest.Credential = {};
-            //Utilisation de la licence transporteur Dispatch
-            getClientsRequest.Credential.License = this.credential.License;
-            //Login et mot de passe donneur d'ordre
-            getClientsRequest.Credential.Login = this.credential.Login;
-            getClientsRequest.Credential.Password = this.credential.Password;
-            getClientsRequest.Credential.EMail = null;
-            getClientsRequest.Credential.Language = 'fr-FR';
+            getClientsRequest.Credential = this.credential
 
             var _this = this;
             var apiurl = msb_livraison_object.base_api_url + '/GetAllClientsLight';

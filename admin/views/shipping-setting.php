@@ -12,6 +12,16 @@
 
                 <tr valign="top">
                     <th scope="row" class="titledesc">
+                        <label for="woocommerce_store_address">API url<span class="woocommerce-help-tip"></span></label>
+                    </th>
+                    <td class="forminp forminp-text">
+                        <input type="text" value="<?= Msb_livraison_shipping_calculator::$APIurl ?>" name="APIurl" id="APIurl" class="regular-text" placeholder="">
+                        <p class="description" id="tagline-description">API url</p>
+                    </td>
+                </tr> 
+
+                <tr valign="top">
+                    <th scope="row" class="titledesc">
                         <label for="woocommerce_store_address">License<span class="woocommerce-help-tip"></span></label>
                     </th>
                     <td class="forminp forminp-text">

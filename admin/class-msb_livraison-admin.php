@@ -55,6 +55,7 @@ class Msb_livraison_Admin {
 	private static $plugin_slug = "msb-calculator-setting";
 	private static $msb_option_key = "msb-calculator-setting";
 	private $msb_settings;
+	public static $APIurl = "";
 	public static $license = "";
 	public static $login = "";
 	public static $password = "";
@@ -78,6 +79,7 @@ class Msb_livraison_Admin {
 		/* load shipping calculator setting */
 		$this->msb_settings = get_option(self::$msb_option_key);
 
+		self::$APIurl = $this->get_setting('APIurl');
 		self::$license = $this->get_setting('license');
 		self::$login = $this->get_setting('login');
 		self::$password = $this->get_setting('password');
@@ -98,6 +100,13 @@ class Msb_livraison_Admin {
 		if (isset($_POST[self::$plugin_slug])) {
 			$this->saveSetting();
 		}
+		
+		$this->msb_settings = get_option(self::$msb_option_key);
+		self::$APIurl = $this->get_setting('APIurl');
+		self::$license = $this->get_setting('license');
+		self::$login = $this->get_setting('login');
+		self::$password = $this->get_setting('password');
+		self::$client = $this->get_setting('client');
 		/* include admin  shipping calculator setting file */
 		include_once self::$plugin_dir . "admin/views/shipping-setting.php";
 	}

@@ -10,7 +10,8 @@ var app = new Vue({
         return {
             isShowPopupDisabled: true,
             isDeliverySlots: true,
-            isHiddenPopup: true,
+            isHiddenPopup: false,
+            displayCreneau: false,
             openCodeAutocomplete: true,
             calc_shipping: null,
             shipping_avalablity_message: "",
@@ -19,13 +20,44 @@ var app = new Vue({
             calc_shipping_message: "",
             shipping_methods: [],
 
+            searchResults: [],
             location_label: '',
             location_infos: {
                 PostalCode: null,
                 CityName: null,
             },
-            searchResults: [],
-            disabled_dates: { weekdays: [1, 7] },
+
+            disabled_dates: [
+                { weekdays: [1, 7] },
+            ],
+            holidays_dates: [],
+            holidays_days: [
+                new Date(2021, 01 - 1, 01),
+                new Date(2021, 03 - 1, 20),
+                new Date(2021, 03 - 1, 28),
+                new Date(2021, 04 - 1, 02),
+                new Date(2021, 04 - 1, 04),
+                new Date(2021, 04 - 1, 05),
+                new Date(2021, 05 - 1, 01),
+                new Date(2021, 05 - 1, 08),
+                new Date(2021, 05 - 1, 13),
+                new Date(2021, 05 - 1, 23),
+                new Date(2021, 05 - 1, 24),
+                new Date(2021, 05 - 1, 30),
+                new Date(2021, 06 - 1, 20),
+                new Date(2021, 06 - 1, 21),
+                new Date(2021, 07 - 1, 14),
+                new Date(2021, 08 - 1, 15),
+                new Date(2021, 09 - 1, 22),
+                new Date(2021, 10 - 1, 31),
+                new Date(2021, 11 - 1, 01),
+                new Date(2021, 11 - 1, 11),
+                new Date(2021, 12 - 1, 21),
+                new Date(2021, 12 - 1, 24),
+                new Date(2021, 12 - 1, 25),
+                new Date(2021, 12 - 1, 26),
+                new Date(2021, 12 - 1, 31)
+            ],
             selected: null,
 
             search_val: '',
@@ -68,6 +100,14 @@ var app = new Vue({
     created() {
         //setInterval(this.setDate(4), 1000);
 
+        this.holidays_days.forEach(holiday => {
+            this.holidays_dates.push({
+                start: holiday,
+                end: holiday
+            })
+        });
+
+        this.disabled_dates.push(...this.holidays_dates);
     },
 
     computed: {
@@ -129,64 +169,72 @@ var app = new Vue({
             }
             date.setDate(date.getDate() + decal_shipping_time);
             return date;
-        },
 
+        },
 
         shipping_date() {
 
             if (this.days[0]) {
-
                 let _days = _.cloneDeep(this.days);
-                let _date = _days[0].date;
-
-                var _decal_shipping_time = 0;
-                _date.setDate(_date.getDate() + this.shipping_time);
-
-                if (this.shipping_time == 2) {
-                    if (_date.getDay() == 6 || _date.getDay() == 0) {
-                        _decal_shipping_time = 2;
-                    }
-                } else if (this.shipping_time == 3) {
-                    if (_date.getDay() == 1) {
-                        _decal_shipping_time = 1;
-                    } else if (_date.getDay() == 6) {
-                        _decal_shipping_time = 3;
-                    } else if (_date.getDay() == 0) {
-                        _decal_shipping_time = 2;
-                    }
-                }
-
-                _date.setDate(_date.getDate() + _decal_shipping_time);
-
-                return _date;
-            }
-        },
-
-    },
-
-    watch: {
-        location_label(val) {
-            this.searchCity(val);
-        }
-    },
-
-    filters: {
-
-        formatDate(value) {
-            if (value) {
-                return moment(String(value)).format('dddd D MMMM');
-            }
-        },
-        stringDate(value) {
-            if (value) {
-                return moment(String(value)).format('D/MM/yyyy');
+                return this.get_shipping_dates(_days[0].date);
             }
         },
 
     },
 
     methods: {
+        get_shipping_dates(_date) {
 
+            console.log('Initial date');
+            console.log(_date);
+
+            _date.setDate(_date.getDate() + this.shipping_time);
+            _shipping_date = this.calc_shipping_dates(_date);
+
+            this.holidays_days.forEach(holiday => {
+
+                if (holiday.getDate() === _shipping_date.getDate() && holiday.getMonth() === _shipping_date.getMonth()) {
+
+                    console.log('Holidays_days');
+                    console.log(_shipping_date);
+
+                    _shipping_date.setDate(_shipping_date.getDate() + 1);
+                    _shipping_date = this.calc_shipping_dates(_shipping_date);
+
+                }
+            });
+
+            console.log('Final date');
+            console.log(_shipping_date);
+            console.log('          -----------------------------           ');
+            return _shipping_date;
+        },
+
+        calc_shipping_dates(_date) {
+
+            var _decal_shipping_time = 0;
+            if (this.shipping_time == 2) {
+                if (_date.getDay() == 6 || _date.getDay() == 0) {
+                    _decal_shipping_time = 2;
+                }
+            } else if (this.shipping_time == 3) {
+                if (_date.getDay() == 1) {
+                    _decal_shipping_time = 1;
+                } else if (_date.getDay() == 6) {
+                    _decal_shipping_time = 3;
+                } else if (_date.getDay() == 0) {
+                    _decal_shipping_time = 2;
+                }
+            }
+
+            if (_decal_shipping_time != 0) {
+                console.log('Weekend');
+                console.log(_date);
+                _date.setDate(_date.getDate() + _decal_shipping_time)
+            }
+
+            return _date;
+        },
         calcShipping() {
             // And here is our jQuery ajax call
             j.ajax({
@@ -204,17 +252,17 @@ var app = new Vue({
                     if (code == 'success') {
                         app.isShowPopupDisabled = false;
                         if (id == 4) {
-                            app.disabled_dates = { weekdays: [1, 2, 7] };
+                            app.disabled_dates = [{ weekdays: [1, 2, 7] }, ...app.holidays_dates];
                             app.shipping_time = 3;
                             app.isShowPopupDisabled = false;
                             app.isDeliverySlots = true;
                         } else if (id == 5) {
-                            app.disabled_dates = { weekdays: [1, 7] };
+                            app.disabled_dates = [{ weekdays: [1, 7] }, ...app.holidays_dates];
                             app.shipping_time = 2;
                             app.isShowPopupDisabled = false;
                             app.isDeliverySlots = true;
                         } else {
-                            app.disabled_dates = { weekdays: [1, 7] };
+                            app.disabled_dates = [{ weekdays: [1, 7] }, ...app.holidays_dates];
                             app.shipping_time = 2;
                             app.isShowPopupDisabled = false;
                             app.isDeliverySlots = true;
@@ -348,29 +396,26 @@ var app = new Vue({
             this.calcShipping();
         },
 
-        shipping_dates(date) {
-
-            var decal_shipping_time = 0;
-            date.setDate(date.getDate() + this.shipping_time);
-
-            if (this.shipping_time == 2)
-                if (date.getDay() == 6 || date.getDay() == 0)
-                    decal_shipping_time = 2;
-
-                else if (this.shipping_time == 3)
-                if (date.getDay() == 4)
-                    decal_shipping_time = 2;
-                else if (date.getDay() == 5)
-                decal_shipping_time = 1;
-
-
-
-            date.setDate(date.getDate() + decal_shipping_time);
-            return date;
-        },
-
-
     },
 
+    watch: {
+        location_label(val) {
+            this.searchCity(val);
+        }
+    },
 
+    filters: {
+
+        formatDate(value) {
+            if (value) {
+                return moment(String(value)).format('dddd D MMMM');
+            }
+        },
+        stringDate(value) {
+            if (value) {
+                return moment(String(value)).format('D/MM/yyyy');
+            }
+        },
+
+    },
 });

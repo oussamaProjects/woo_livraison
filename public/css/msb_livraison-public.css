@@ -1081,7 +1081,6 @@ span.translation_missing {
 }
 
 .form__field--popup .title {
-    height: 24px;
     font-family: CormorantGaramond;
     font-size: 20px;
     font-weight: bold;
@@ -1089,6 +1088,20 @@ span.translation_missing {
     letter-spacing: normal;
     color: #363534;
     margin-bottom: 16px;
+}
+
+.form__field--step {
+    display: none;
+}
+
+.form__field--step .oe_custom_button {
+    width: 100%;
+    margin: 8px 0;
+}
+
+.form__field--step .return_to_shipping span {
+    text-decoration: underline;
+    font-size: 14px;
 }
 
 .bande-grise {
@@ -1168,6 +1181,45 @@ span.translation_missing {
 }
 
 @media (max-width: 767.98px) {
+    .form__field--container {
+        bottom: 43px;
+    }
+    .form__field--popup {
+        width: 100%;
+        height: 100%;
+        padding: 2rem 0 0 0;
+        border-radius: 0px;
+        display: flex;
+        flex-direction: column;
+    }
+    .form__field--popup-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .form__field--step {
+        display: block;
+    }
+    .bande-grise {
+        width: initial;
+        height: 70px;
+        border: solid 0.5px #979797;
+        background-color: #d8d8d8;
+        position: relative;
+        margin-top: auto;
+    }
+    .mobile_hidden {
+        display: none !important;
+        opacity: 0 !important;
+    }
+    .bande-grise .ajouter-au-panier {
+        display: none;
+    }
+    .form__field--popup .form__field {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
     .form__field__input input[type="date"],
     .form__field__input input[type="email"],
     .form__field__input input[type="number"],
@@ -1521,7 +1573,6 @@ div .form__oneLine .form__field input {
 @media (max-width: 767.98px) {
     .radioItem__wrapper {
         display: block;
-        padding: 1.5rem 0;
         bottom: -3.2rem;
         margin-left: 0;
         margin-bottom: 0;

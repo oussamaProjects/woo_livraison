@@ -14,14 +14,15 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         private static $plugin_slug = "msb-calculator-setting";
         private static $msb_option_key = "msb-calculator-setting";
         private $msb_settings;
+
+        public static $APIurl = "";
         public static $license = "";
         public static $login = "";
         public static $password = "";
         public static $client = "";
         public static $calculator_metakey = "__calculator_hide";
 
-        public function __construct()
-        {
+        public function __construct(){
             global $msb_livraison_plugin_dir, $msb_livraison_plugin_url;
 
             /* plugin url and directory variable */
@@ -30,7 +31,12 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
 
             /* load shipping calculator setting */
             $this->msb_settings = get_option(self::$msb_option_key);
+            
+            // echo '<pre>';
+            // var_export($this->msb_settings);
+            // die;
 
+            self::$APIurl = $this->get_setting('APIurl');
             self::$license = $this->get_setting('license');
             self::$login = $this->get_setting('login');
             self::$password = $this->get_setting('password');
@@ -121,7 +127,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         
         public function msb_woocommerce_after_add_to_cart_button() {
             echo do_shortcode('[msb-shipping]'); 
-            echo do_shortcode('[msb-create-mission]'); 
+            // echo do_shortcode('[msb-create-mission]'); 
         } 
     
         public function msb_add_to_cart_validation( $passed, $product_id, $quantity, $variation_id = null ) {
@@ -332,7 +338,6 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             return $show_shipping;
         }
 
-
         /*
             * Created on Fri Mar 12 2021 12:42:27 PM
             * Hide shipping rates when free shipping is available.
@@ -349,7 +354,6 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             }
             return ! empty( $free ) ? $free : $rates;
         }
-
 
         /*
             * Created on Fri Mar 12 2021 12:42:27 PM
@@ -627,8 +631,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
                 load_plugin_textdomain( 'msb_livraison', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/' );
         }
         
-        public function save_quick_shipping_fields($product)
-        {
+        public function save_quick_shipping_fields($product){
             $product_id = $product->id;
 
             if ($product_id > 0) {
@@ -637,13 +640,11 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             }
         }
 
-        public function output_quick_shipping_fields()
-        {
+        public function output_quick_shipping_fields(){
             include self::$plugin_dir . "views/quick-settings.php";
         }
 
-        public function output_quick_shipping_values($column)
-        {
+        public function output_quick_shipping_values($column){
             global $post;
 
             $product_id = $post->ID;
@@ -657,13 +658,11 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             }
         }
 
-        public function output_bulk_shipping_fields()
-        {
+        public function output_bulk_shipping_fields(){
             include self::$plugin_dir . "views/bulk-settings.php";
         }
 
-        public function save_bulk_shipping_fields($product)
-        {
+        public function save_bulk_shipping_fields($product){
             $product_id = $product->id;
             if ($product_id > 0) {
                 $metavalue = isset($_REQUEST[self::$calculator_metakey]) ? "yes" : "no";
@@ -671,22 +670,19 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             }
         }
 
-        public function custom_woocommerce_process_product_meta($post_id)
-        {
+        public function custom_woocommerce_process_product_meta($post_id){
             $metavalue = isset($_POST[self::$calculator_metakey]) ? "yes" : "no";
             update_post_meta($post_id, self::$calculator_metakey, $metavalue);
         }
 
-        public function add_custom_price_box()
-        {
+        public function add_custom_price_box(){
             $hide_calculator = "yes";
             if (isset($_GET["post"]))
                 $hide_calculator = get_post_meta($_GET["post"], self::$calculator_metakey, true);
             woocommerce_wp_checkbox(array('id' => self::$calculator_metakey, 'value' => $hide_calculator, 'label' => __('Hide Shipping Calculator', 'ewchpa_hide_calculator')));
         }
 
-        public function update_shipping_method()
-        {
+        public function update_shipping_method(){
             WC_Shortcode_Cart::calculate_shipping();
 
             if (isset($_POST["product_id"]) && $this->check_product_incart($_POST["product_id"]) === false) {
@@ -747,8 +743,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             die();
         }
 
-        public function check_zip_code_availability()
-        {
+        public function check_zip_code_availability(){
             WC_Shortcode_Cart::calculate_shipping();
             if (isset($_POST["product_id"]) && $this->check_product_incart($_POST["product_id"]) === false) {
                 $qty = (isset($_POST['current_qty']) && $_POST['current_qty'] > 0) ? $_POST['current_qty'] : 1;
@@ -832,9 +827,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         }
 
         /* function for display shipping calculator on product page */
-
-        public function display_shipping_calculator()
-        {
+        public function display_shipping_calculator(){
             global $product;
             
             $id = (WC()->version < '2.7.0' ) ? $product->id : $product->get_id();
@@ -842,15 +835,13 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
                 include_once self::$plugin_dir . 'public/views/shipping-calculator.php';
         }
 
-        function msb_shipping_calculator()
-        {
+        public function msb_shipping_calculator(){
             ob_start();
             include_once self::$plugin_dir . 'public/views/shipping-calculator.php';
             $content = ob_get_contents();
             ob_end_clean();
             return $content;
         }
-
 
         //Return string for shortcode
         public function msb_shipping(){
@@ -902,8 +893,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         }  
 
         /* calculate shipping */
-        public function ajax_calc_shipping()
-        {
+        public function ajax_calc_shipping(){
             $returnResponse = array();
             if (isset($_REQUEST["action"]) && $_REQUEST["action"] == "ajax_calc_shipping"):
 
@@ -941,8 +931,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             die();
         }
 
-        public function check_product_incart($product_id)
-        {
+        public function check_product_incart($product_id){
             foreach (WC()->cart->get_cart() as $cart_item_key => $values) {
                 $_product = $values['data'];
 
@@ -954,9 +943,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         }
 
         /* function for calculate shiiping */
-
-        public function get_shipping_text($shipping_method, $country)
-        {
+        public function get_shipping_text($shipping_method, $country){
             global $woocommerce, $post;
             $returnResponse = array();
             WC_Shortcode_Cart::calculate_shipping();
@@ -1005,8 +992,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             return $returnResponse;
         }
 
-        public function admin_script()
-        {
+        public function admin_script(){
             if (is_admin()) {
 
                 // Add the color picker css file       
@@ -1017,8 +1003,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             }
         }
 
-        public function wp_head()
-        {
+        public function wp_head(){
             /* register jquery */
             wp_enqueue_script('jquery');
 
@@ -1073,16 +1058,13 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             <?php
         }
 
-        public function wp_footer()
-        {
+        public function wp_footer(){
             // wp_enqueue_script('wc-country-select');
             // wp_enqueue_script(self::$plugin_slug, self::$plugin_url . "assets/js/shipping-calculator.js");
         }
 
         /* function for get setting */
-
-        public function get_setting($key)
-        {
+        public function get_setting($key){
 
             if (!$key || $key == "")
                 return;
