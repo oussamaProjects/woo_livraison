@@ -10,7 +10,7 @@
         <div class="msb_form">  
 
 
-        <div class="zipCodeSelection__wrapper">
+        <div class="zipCodeSelection__wrapper" v-cloak>
             
                 <div class="zipCodeSelection">
                     <div class="shipping_date_container">
@@ -22,7 +22,7 @@
                             <div class="shipping_date_message" >{{ min_date | formatDate }}</div>  
                         </div> 
                     </div> 
-                    
+
                     <div class="product_price"><?=  $price ?></div>
                     <div class="cost_deliver"><?= __('LIVRAISON OFFERTE','msb_livraison'); ?></div>
                     <div class="where_to_deliver"><?= __('Où faire livrer mon bouquet ? ','msb_livraison'); ?></div>

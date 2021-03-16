@@ -1,4 +1,6 @@
 var j = jQuery.noConflict();
+// the global _ will now be underscore
+var lodash = _.noConflict();
 moment().locale('de');
 
 var app = new Vue({
@@ -10,8 +12,8 @@ var app = new Vue({
         return {
             isShowPopupDisabled: true,
             isDeliverySlots: true,
-            isHiddenPopup: false,
-            displayCreneau: false,
+            isHiddenPopup: true,
+            displayCreneauMobile: false,
             openCodeAutocomplete: true,
             calc_shipping: null,
             shipping_avalablity_message: "",
@@ -142,16 +144,19 @@ var app = new Vue({
             return [{
                     "id": 1,
                     "slot_name": "10-13H",
+                    "slot_display_name": "Entre 10 et 13H",
                     "selected": true
                 },
                 {
                     "id": 2,
                     "slot_name": "14-17H",
+                    "slot_display_name": "Entre 14 et 17H",
                     "selected": false
                 },
                 {
                     "id": 3,
                     "slot_name": "18-21H",
+                    "slot_display_name": "Entre 18 et 21H",
                     "selected": false
                 },
             ]
@@ -175,7 +180,7 @@ var app = new Vue({
         shipping_date() {
 
             if (this.days[0]) {
-                let _days = _.cloneDeep(this.days);
+                let _days = lodash.cloneDeep(this.days);
                 return this.get_shipping_dates(_days[0].date);
             }
         },

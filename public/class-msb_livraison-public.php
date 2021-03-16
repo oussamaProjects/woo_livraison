@@ -74,6 +74,8 @@ class Msb_livraison_Public {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/msb_livraison-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name . '.fonts.gstatic', 'https://fonts.gstatic.com' );
+		wp_enqueue_style( $this->plugin_name . '.fonts','https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Hind:wght@300;400;500;600;700&display=swap' );
 
 	}
 
