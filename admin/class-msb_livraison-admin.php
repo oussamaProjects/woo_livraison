@@ -84,12 +84,7 @@ class Msb_livraison_Admin {
 		self::$login = $this->get_setting('login');
 		self::$password = $this->get_setting('password');
 		self::$client = $this->get_setting('client');
-		
-		var_dump(self::$APIurl);
-		var_dump(self::$license);
-		var_dump(self::$login);
-		var_dump(self::$password);
-		var_dump(self::$client);
+
 	}
 
 	public function admin_menu()
@@ -104,19 +99,9 @@ class Msb_livraison_Admin {
 		/* save shipping calculator setting */
 		if (isset($_POST[self::$plugin_slug])) {
 			$this->saveSetting();
-			$this->msb_settings = get_option(self::$msb_option_key);
-			self::$APIurl = $this->get_setting('APIurl');
-			self::$license = $this->get_setting('license');
-			self::$login = $this->get_setting('login');
-			self::$password = $this->get_setting('password');
-			self::$client = $this->get_setting('client');
-			var_dump(self::$APIurl);
-			var_dump(self::$license);
-			var_dump(self::$login);
-			var_dump(self::$password);
-			var_dump(self::$client);
+			wp_redirect($_SERVER['HTTP_REFERER']);
 		}
-		
+		 
 		/* include admin  shipping calculator setting file */
 		include_once self::$plugin_dir . "admin/views/shipping-setting.php";
 	}

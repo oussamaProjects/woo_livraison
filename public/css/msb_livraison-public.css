@@ -1075,7 +1075,8 @@ span.translation_missing {
     opacity: 1;
 }
 
-.shipping_avalablity_message {
+.product-summary .shipping_avalablity_message,
+.product-summary .shipping_avalablity_message span.amount {
     text-decoration: line-through;
     font: 300 11px/normal 'Hind';
     color: #363534;
@@ -1093,9 +1094,9 @@ span.translation_missing {
     -webkit-box-direction: normal;
     -ms-flex-direction: row;
     flex-direction: row;
-    -webkit-box-align: end;
-    -ms-flex-align: end;
-    align-items: flex-end;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
     padding: 0 0 16px 0;
 }
 
@@ -1237,8 +1238,8 @@ span.translation_missing {
     width: 250px;
 }
 
-.js-price,
-span.amount {
+.product-summary form .js-price,
+.product-summary form span.amount {
     font: bold 30px/44px 'Hind';
     letter-spacing: normal;
     color: #23345c !important;
@@ -1410,6 +1411,20 @@ span.amount {
     outline: none !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
+}
+
+.form__field__input input[type="date"]:-moz-read-only,
+.form__field__input input[type="email"]:-moz-read-only,
+.form__field__input input[type="number"]:-moz-read-only,
+.form__field__input input[type="password"]:-moz-read-only,
+.form__field__input input[type="tel"]:-moz-read-only,
+.form__field__input input[type="text"]:-moz-read-only,
+.form__field__input input[type="textarea"]:-moz-read-only,
+.form__field__input textarea:-moz-read-only {
+    color: #363534;
+    background-color: #ffffff;
+    pointer-events: none;
+    cursor: not-allowed;
 }
 
 .form__field__input input[type="date"]:-moz-read-only,
