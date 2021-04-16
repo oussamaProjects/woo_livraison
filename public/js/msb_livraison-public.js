@@ -112,6 +112,7 @@
             });
 
         });
+
         $('.shipping_postcode input,.shipping_state input').blur(function() {
             $(".loaderimage").show();
             element = $(this);
@@ -134,6 +135,46 @@
             return false;
         });
 
+        setTimeout(() => {
+
+            let variations = $(".variations").detach();
+            variations.appendTo(".msb_variation_container");
+
+            let variationPrice = $(".woocommerce-variation.single_variation");
+            variationPriceClone = variationPrice.detach();
+
+            if (variationPriceClone.length == 0) {
+                variationPriceClone = $(".summary > .price").clone();
+            }
+            variationPriceClone.appendTo(".msb_price_container");
+
+            console.log(variationPriceClone);
+
+            let variationName = $(".woo-selected-variation-item-name");
+            variationNameClone = variationName.clone();
+            // console.log(variationNameClone);
+            $(".amoureuse---double .infos .variant").html('Taille' + variationNameClone.text());
+            $(".bande-grise .js-price .price").html(variationPriceClone.find('span.amount'));
+
+        }, 500);
+
+        $('.button-variable-wrapper li').on('click', function(e) {
+            e.preventDefault();
+
+            setTimeout(() => {
+
+                let _variationName = $(".woo-selected-variation-item-name");
+                _variationNameClone = _variationName.clone();
+                // console.log(_variationNameClone);
+                $(".amoureuse---double .infos .variant").html('Taille' + _variationNameClone.text());
+
+                let _variationPrice = $(".woocommerce-variation.single_variation");
+                _variationPriceClone = _variationPrice.clone();
+                // console.log(_variationPriceClone);
+                $(".bande-grise .js-price .price").html(_variationPriceClone.find('span.amount'));
+
+            }, 500);
+        });
 
     });
 })(jQuery);

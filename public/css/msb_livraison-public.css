@@ -1082,6 +1082,13 @@ span.translation_missing {
     color: #363534;
 }
 
+.single-product .product .msb_price_container .woocommerce-variation-price,
+.single-product .product .msb_price_container>.price {
+    border: none;
+    padding: 0;
+    margin: 8px 0;
+}
+
 .woocommerce-checkout ul#shipping_method {
     text-decoration: line-through !important;
 }
@@ -1097,7 +1104,6 @@ span.translation_missing {
     -webkit-box-align: start;
     -ms-flex-align: start;
     align-items: flex-start;
-    padding: 0 0 16px 0;
 }
 
 .shipping_date_container .shipping_date {
@@ -1117,7 +1123,6 @@ span.translation_missing {
 .shipping_date_container .image {
     width: 50px;
     height: 42px;
-    background-color: #997a42;
     margin-right: 8px;
 }
 
@@ -1183,7 +1188,7 @@ span.translation_missing {
 }
 
 .form__field--popup .form__field {
-    padding: 2rem 2rem 0 2rem;
+    padding: 1.5rem 1.5rem 0 1.5rem;
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
@@ -1238,8 +1243,33 @@ span.translation_missing {
     width: 250px;
 }
 
+.bande-grise .js-price,
 .product-summary form .js-price,
-.product-summary form span.amount {
+.product-summary form span.amount,
+.msb_price_container span.amount {
+    font: bold 30px/44px 'Hind';
+    letter-spacing: normal;
+    color: #23345c !important;
+    margin-left: auto;
+    text-align: right;
+}
+
+.bande-grise .js-price .price,
+.product-summary form .js-price .price {
+    margin: -6px 0 0 0;
+}
+
+.bande-grise .js-price .woocommerce-Price-currencySymbol,
+.product-summary form .js-price .woocommerce-Price-currencySymbol {
+    font-size: inherit;
+    vertical-align: middle;
+    margin-top: 0;
+}
+
+.bande-grise .js-price,
+.product-summary form .js-price,
+.product-summary form span.amount,
+.msb_price_container span.amount {
     font: bold 30px/44px 'Hind';
     letter-spacing: normal;
     color: #23345c !important;
@@ -1263,12 +1293,36 @@ span.translation_missing {
 
 .amoureuse---double {
     height: 30px;
-    font-family: CormorantGaramond;
-    font-size: 25px;
-    font-weight: bold;
-    line-height: normal;
     letter-spacing: normal;
     color: #363534;
+    display: flex;
+    align-self: flex-start;
+}
+
+.amoureuse---double .infos {
+    padding: 8px;
+}
+
+.amoureuse---double .infos .title {
+    font: bold 25px CormorantGaramond;
+    margin: 0;
+}
+
+.amoureuse---double .infos .variant {
+    font: normal 11px Hind;
+    color: #363534;
+}
+
+.amoureuse---double .image {
+    height: 64px;
+    width: 64px;
+    display: none;
+}
+
+.amoureuse---double .image img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 .form__field .js-field-validation,
@@ -1302,9 +1356,6 @@ span.translation_missing {
 }
 
 @media (max-width: 767.98px) {
-    .form__field--container {
-        bottom: 43px;
-    }
     .form__field--popup {
         width: 100%;
         height: 100%;
@@ -1345,9 +1396,12 @@ span.translation_missing {
         border: solid 1px #f3f3f3;
         background-color: #f3f3f3;
     }
-    .amoureuse---double {
+    .amoureuse---double .infos .title {
         font-size: 15px;
         font-weight: 600;
+    }
+    .amoureuse---double .image {
+        display: block;
     }
     .mobile_hidden {
         display: none !important;
@@ -1364,6 +1418,7 @@ span.translation_missing {
         display: block;
     }
     .form__field--popup .form__field {
+        padding: 1rem 1rem 0 1rem;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -3825,7 +3880,7 @@ dl.variation dt.variation-hidden {
 }
 
 .shipment_event_list {
-    margin: 24px 0;
+    margin: 8px 0;
 }
 
 .shipment_event_list th {

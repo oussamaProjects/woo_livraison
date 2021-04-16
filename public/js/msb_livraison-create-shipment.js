@@ -14,6 +14,7 @@ var app_shipping = new Vue({
         items: {},
         apiRequest: '',
         apiResponse: '',
+        connection_token: '',
 
         searchParam: {
             clientCode: msb_livraison_object.clientCode,
@@ -157,8 +158,8 @@ var app_shipping = new Vue({
                 response = response.data;
 
                 if (response.Status === 200 && response.Authentified === true) {
-                    console.log(response);
-                    alert('Authentification success Token is ' + response.ConnectionToken);
+                    console.log('Authentification success Token is ' + response.ConnectionToken);
+                    _this.connection_token = response.ConnectionToken;
                 }
 
             }).catch(error => console.log(error));

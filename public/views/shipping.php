@@ -5,6 +5,7 @@
     $product = wc_get_product( $post_id );
     $title = get_the_title($post_id);
     $price = $product->get_price_html();
+    $image = wp_get_attachment_url( $product->get_image_id()); 
 ?>
 
             <div class="zipCodeSelector__wrapper js-zip-code-selector zipCodeSelector__wrapper--frontShow" data-action="base-autocomplete:selected->base-zip-code-selector#newSelection" data-controller="base-zip-code-selector">
@@ -75,7 +76,7 @@
                             <input type="hidden" name="shipping_dates" id="shipping_dates" :value="shipping_date | stringDate">
                             <!-- <input type="hidden" name="shipping_dates" id="shipping_dates" :value="formated_dates"> -->
                             <!-- <input type="hidden" name="shipping_dates_ids" id="shipping_dates_ids" :value="dates_ids"> -->
-                            <v-calendar :attributes="attributes" @dayclick="onDayClick" title-position="left" is-expanded is-range :locale="locale" :disabled-dates="disabled_dates"></v-calendar>
+                            <v-calendar :attributes="attributes" @dayclick="onDayClick" title-position="left" is-expanded is-range :locale="locale" :min-date="min_date" :disabled-dates="disabled_dates"></v-calendar>
                         </div>
 
                         <div class="form__field--step">
@@ -117,11 +118,19 @@
                 </div>
                 <div class="bande-grise">
                     <div class="amoureuse---double">
-                        <?= $title; ?>
+                        <?php if(!empty($image)): ?>
+                            <div class="image">
+                                <img src="<?= $image; ?>" alt="">
+                            </div>
+                        <?php endif; ?>
+                        <div class="infos">
+                            <div class="title"> <?= $title; ?></div>
+                            <div class="variant"></div>
+                        </div>
                     </div>	
                     <div class="js-price">
-                        <span class="js-shipping-text">Livraison offerte</span>
-                        <?= $price; ?>
+                        <span class="js-shipping-text"><?= __('Livraison offerte', 'msb_livraison'); ?></span>
+                        <div class="price"><?= $price; ?></div>
                     </div> 
                     <button type="submit" name="add-to-cart" value="<?= $post_id; ?>" class="oe_custom_button ajouter-au-panier"><?= __('Ajouter au panier', 'msb_livraison'); ?></button>
                 </div>

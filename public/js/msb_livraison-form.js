@@ -21,13 +21,18 @@ var app = new Vue({
             shipping_time: 2,
             calc_shipping_message: "",
             shipping_methods: [],
-
+            min_date: new Date(),
             searchResults: [],
             location_label: '',
             location_infos: {
                 PostalCode: null,
                 CityName: null,
             },
+
+            response: '',
+            apiRequest: '',
+            apiResponse: '',
+            connection_token: '',
 
             disabled_dates: [
                 { weekdays: [1, 7] },
@@ -70,7 +75,8 @@ var app = new Vue({
             credential: {
                 License: msb_livraison_object.credential.license,
                 Login: msb_livraison_object.credential.login,
-                Password: msb_livraison_object.credential.password
+                Password: msb_livraison_object.credential.password,
+                ConnectionToken: ''
             },
             clientCode: msb_livraison_object.clientCode,
 
@@ -100,7 +106,7 @@ var app = new Vue({
         }
     },
     created() {
-        //setInterval(this.setDate(4), 1000);
+        // setInterval(this.setDate(4), 1000);
 
         this.holidays_days.forEach(holiday => {
             this.holidays_dates.push({
@@ -110,6 +116,7 @@ var app = new Vue({
         });
 
         this.disabled_dates.push(...this.holidays_dates);
+        this.authentication();
     },
 
     computed: {
@@ -162,20 +169,20 @@ var app = new Vue({
             ]
         },
 
-        min_date() {
+        // min_date() {
 
-            var date = new Date();
-            var shipping_time = 2;
-            var decal_shipping_time = 0;
+        //     var date = new Date();
+        //     var shipping_time = 2;
+        //     var decal_shipping_time = 0;
 
-            date.setDate(date.getDate() + shipping_time);
-            if (date.getDay() == 6 || date.getDay() == 0) {
-                decal_shipping_time = 2;
-            }
-            date.setDate(date.getDate() + decal_shipping_time);
-            return date;
+        //     date.setDate(date.getDate() + shipping_time);
+        //     if (date.getDay() == 6 || date.getDay() == 0) {
+        //         decal_shipping_time = 2;
+        //     }
+        //     date.setDate(date.getDate() + decal_shipping_time);
+        //     return date;
 
-        },
+        // },
 
         shipping_date() {
 
@@ -188,6 +195,33 @@ var app = new Vue({
     },
 
     methods: {
+
+        authentication() {
+            console.log('authentication');
+            //Creation d'un objet de type requestType : 
+            var authentificationRequest = {};
+            authentificationRequest.Credential = this.credential;
+
+            var _this = this;
+            var apiurl = msb_livraison_object.base_api_url + '/Authentify';
+
+            _this.apiRequest = authentificationRequest;
+            axios.post(apiurl, authentificationRequest).then(response => {
+                _this.response = response;
+                _this.apiResponse = response;
+                response = response.data;
+
+                if (response.Status === 200 && response.Authentified === true) {
+                    console.log('Authentification success Token is ' + response.ConnectionToken);
+                    _this.connection_token = response.ConnectionToken;
+                    _this.credential.ConnectionToken = response.ConnectionToken;
+                }
+
+            }).catch(error => console.log(error));
+
+
+        },
+
         get_shipping_dates(_date) {
 
             console.log('Initial date');
@@ -240,6 +274,7 @@ var app = new Vue({
 
             return _date;
         },
+
         calcShipping() {
             // And here is our jQuery ajax call
             j.ajax({
@@ -292,11 +327,11 @@ var app = new Vue({
             this.delivery_slot_id = e.target.id;
         },
 
-        setDate(days) {
-            var date = new Date();
-            date.setDate(date.getDate() + days);
-            this.min_date = date;
-        },
+        // setDate(days) {
+        //     var date = new Date();
+        //     date.setDate(date.getDate() + days);
+        //     this.min_date = date;
+        // },
 
         searchCity(val) {
 
@@ -315,6 +350,7 @@ var app = new Vue({
 
             axios.post(apiurl, request).then(response => {
                 _this.response = response;
+                console.log(_this.response);
                 response = response.data;
                 var results = [];
                 if (response.Status === 200) {
@@ -418,7 +454,7 @@ var app = new Vue({
         },
         stringDate(value) {
             if (value) {
-                return moment(String(value)).format('D/MM/yyyy');
+                return moment(String(value)).format('DD/MM/yyyy');
             }
         },
 
