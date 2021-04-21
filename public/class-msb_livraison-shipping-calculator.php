@@ -144,15 +144,15 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
             // echo '</pre>';
             // die;
 
-            // if( empty( $_POST['delivery_slot'] ) ) {
-            //     $passed = false;
-            //     wc_add_notice( __( 'delivery_slot is a required field.', 'msb_livraison' ), 'error' );
-            // }
+            if( empty( $_POST['delivery_slot'] ) ) {
+                $passed = false;
+                wc_add_notice( __( 'Merci de renseigner un créneau de livraison.', 'msb_livraison' ), 'error' );
+            }
 
-            // if( empty( $_POST['shipping_dates'] ) ) {
-            //     $passed = false;
-            //     wc_add_notice( __( 'shipping_dates is a required field.', 'msb_livraison' ), 'error' );
-            // }
+            if( empty( $_POST['shipping_dates'] ) ) {
+                $passed = false;
+                wc_add_notice( __( 'Merci de renseigner une date de livraison.', 'msb_livraison' ), 'error' );
+            }
 
             if (empty($_POST['postal_code'])) {
                 $passed = false;
@@ -955,6 +955,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         {
 
             wp_enqueue_script('msb_livraison_moment');
+            wp_enqueue_script('msb_livraison_fr_moment');
             wp_enqueue_script('msb_livraison_vuejs');
             wp_enqueue_script('msb_livraison_vmoment');
             wp_enqueue_script('msb_livraison_jquery-ui');
@@ -984,6 +985,7 @@ if (!class_exists('Msb_livraison_shipping_calculator')) {
         {
 
             wp_enqueue_script('msb_livraison_moment');
+            wp_enqueue_script('msb_livraison_fr_moment');
             wp_enqueue_script('msb_livraison_vuejs');
             wp_enqueue_script('msb_livraison_vmoment');
             wp_enqueue_script('msb_livraison_jquery-ui');

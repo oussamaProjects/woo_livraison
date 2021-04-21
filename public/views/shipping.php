@@ -47,11 +47,12 @@
                     <?= __('Besoin d’une livraison ailleurs ? Appelez-nous au 01 41 05 99 00.','msb_livraison'); ?>
                 </div>
 
-                <a class="oe_custom_button" v-on:click="isHiddenPopup = false; return false;" :class="{hidden: !isDeliverySlots}" :disabled="isShowPopupDisabled">
+                <a class="oe_custom_button" v-on:click="isHiddenPopup = false; return false;" :disabled="isShowPopupDisabled">
                     <?= __('Choisir une date de livraison', 'msb_livraison'); ?>
                 </a>
+                
 
-                <button type="submit" name="add-to-cart" value="<?= $post_id; ?>" class="oe_custom_button" :class="{hidden: isDeliverySlots}"><?= __('Ajouter au panier', 'msb_livraison'); ?></button>
+                <!-- <button type="submit" name="add-to-cart" value="<?= $post_id; ?>" class="oe_custom_button" :class="{hidden: isDeliverySlots}"><?= __('Ajouter au panier', 'msb_livraison'); ?></button> -->
 
                 <!-- <br> -->
                 <!-- <a class="oe_custom_button s" v-on:click="createShipment"><?= __('Create Shipment', 'msb_livraison'); ?></a>  -->
@@ -110,7 +111,7 @@
                         </div>
 
                         <div class="form__field--step">
-                            <button type="submit" name="add-to-cart" value="<?= $post_id; ?>" class="oe_custom_button ajouter-au-panier"><?= __('Ajouter au panier', 'msb_livraison'); ?></button>
+                            <button type="submit" name="add-to-cart" value="<?= $post_id; ?>" :class="{selected: shipping_date && delivery_slot_value}" class="oe_custom_button ajouter-au-panier"><?= __('Ajouter au panier', 'msb_livraison'); ?></button>
                         
                             <span class="return_to_shipping" v-on:click="displayCreneauMobile = false"> <i class="fa fa-chevron-left"></i> &nbsp;<span><?= __('Changer ma date de livraison', 'msb_livraison'); ?></span> </span>
                         </div> 
@@ -132,7 +133,7 @@
                         <span class="js-shipping-text"><?= __('Livraison offerte', 'msb_livraison'); ?></span>
                         <div class="price"><?= $price; ?></div>
                     </div> 
-                    <button type="submit" name="add-to-cart" value="<?= $post_id; ?>" class="oe_custom_button ajouter-au-panier"><?= __('Ajouter au panier', 'msb_livraison'); ?></button>
+                    <button type="submit" name="add-to-cart" value="<?= $post_id; ?>" :class="{selected: shipping_date && delivery_slot_value}" class="oe_custom_button ajouter-au-panier"><?= __('Ajouter au panier', 'msb_livraison'); ?></button>
                 </div>
             </div>
         </div>

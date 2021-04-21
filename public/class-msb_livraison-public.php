@@ -121,6 +121,7 @@ class Msb_livraison_Public {
 		wp_register_script( 'msb_livraison_jquery-ui'		, 'https://code.jquery.com/ui/1.12.1/jquery-ui.js');
 		wp_register_script( 'msb_livraison_vuejs'			, 'https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"');
 		wp_register_script( 'msb_livraison_moment'			, 'https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js');
+		wp_register_script( 'msb_livraison_fr_moment'			, 'https://cdn.jsdelivr.net/npm/moment-locale-fr@1.0.0/fr.min.js');
 		wp_register_script( 'msb_livraison_vmoment'			, 'https://cdn.jsdelivr.net/npm/vue-moment@4.1.0/dist/vue-moment.min.js');
 		wp_register_script( 'msb_livraison_vcalendar'		, 'https://cdn.jsdelivr.net/npm/v-calendar@2.1.1/lib/v-calendar.umd.min.js');
 		wp_register_script( 'msb_livraison_axios'			, 'https://cdn.jsdelivr.net/npm/axios@0.21.0/dist/axios.min.js' );

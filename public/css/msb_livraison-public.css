@@ -1039,13 +1039,20 @@ span.translation_missing {
 
 .oe_custom_button.ajouter-au-panier {
     font-size: 20.5px;
+    height: 48px;
+    line-height: 50px;
     width: 250px;
     margin: 0 0 0 24px;
+}
+
+.oe_custom_button.ajouter-au-panier.selected {
+    opacity: 1;
 }
 
 .oe_custom_button {
     width: 100%;
     height: 40px;
+    min-height: initial;
     display: block;
     line-height: 40px;
     font-family: Hind;
@@ -1077,7 +1084,7 @@ span.translation_missing {
 
 .product-summary .shipping_avalablity_message,
 .product-summary .shipping_avalablity_message span.amount {
-    text-decoration: line-through;
+    /* text-decoration: line-through; */
     font: 300 11px/normal 'Hind';
     color: #363534;
 }
@@ -1128,6 +1135,7 @@ span.translation_missing {
 
 .shipping_date_message {
     font: 500 19px/normal 'Hind';
+    text-transform: capitalize;
     letter-spacing: normal;
     color: #997a42;
 }
@@ -1252,11 +1260,6 @@ span.translation_missing {
     color: #23345c !important;
     margin-left: auto;
     text-align: right;
-}
-
-.bande-grise .js-price .price,
-.product-summary form .js-price .price {
-    margin: -6px 0 0 0;
 }
 
 .bande-grise .js-price .woocommerce-Price-currencySymbol,
@@ -1406,6 +1409,10 @@ span.translation_missing {
     .mobile_hidden {
         display: none !important;
         opacity: 0 !important;
+    }
+    .bande-grise .js-price .price,
+    .product-summary form .js-price .price {
+        margin: -6px 0 0 0;
     }
     .bande-grise .ajouter-au-panier {
         display: none;

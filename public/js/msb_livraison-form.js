@@ -1,7 +1,7 @@
 var j = jQuery.noConflict();
 // the global _ will now be underscore
 var lodash = _.noConflict();
-moment().locale('de');
+moment().locale('fr');
 
 var app = new Vue({
     el: "#msb-geocoding",
@@ -21,7 +21,7 @@ var app = new Vue({
             shipping_time: 2,
             calc_shipping_message: "",
             shipping_methods: [],
-            min_date: new Date(),
+            // min_date: new Date(),
             searchResults: [],
             location_label: '',
             location_infos: {
@@ -169,20 +169,20 @@ var app = new Vue({
             ]
         },
 
-        // min_date() {
+        min_date() {
 
-        //     var date = new Date();
-        //     var shipping_time = 2;
-        //     var decal_shipping_time = 0;
+            var date = new Date();
+            var shipping_time = 2;
+            var decal_shipping_time = 0;
 
-        //     date.setDate(date.getDate() + shipping_time);
-        //     if (date.getDay() == 6 || date.getDay() == 0) {
-        //         decal_shipping_time = 2;
-        //     }
-        //     date.setDate(date.getDate() + decal_shipping_time);
-        //     return date;
+            date.setDate(date.getDate() + shipping_time);
+            if (date.getDay() == 6 || date.getDay() == 0) {
+                decal_shipping_time = 2;
+            }
+            date.setDate(date.getDate() + decal_shipping_time);
+            return date;
 
-        // },
+        },
 
         shipping_date() {
 
@@ -448,6 +448,8 @@ var app = new Vue({
     filters: {
 
         formatDate(value) {
+            moment.locale('fr');
+            moment.lang('fr');
             if (value) {
                 return moment(String(value)).format('dddd D MMMM');
             }
